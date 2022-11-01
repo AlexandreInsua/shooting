@@ -1,0 +1,15 @@
+version: 2
+
+updates:
+  - directory: /shooting
+    open-pull-requests-limit: 10
+    package-ecosystem: 'npm'
+    schedule:
+      interval: 'daily'
+      time: "01:00"
+    commit-message:
+      prefix: 'update'
+    labels:
+      - 'dependabot'
+      - 'base'
+      
