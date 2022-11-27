@@ -2,7 +2,7 @@ name: "Main pipeline"
 
 on:
   push:
-    branches: ["main", "deployment"]
+    branches: ["main", "development"]
 
 jobs:
   deploy:
