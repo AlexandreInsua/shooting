@@ -6,7 +6,10 @@
     "build": "nx build",
     "eslint": "nx lint",
     "start": "nx serve",
-    "test": "nx test"
+    "test": "nx test"    ,
+    "test:e2e":"nx e2e monitor-e2e --configuration=production",
+    "test:e2e:watch":"nx e2e monitor-e2e --watch"
+
   },
   "private": true,
   "devDependencies": {

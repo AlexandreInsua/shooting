@@ -8,20 +8,22 @@ jobs:
   deploy:
     runs-on: ubuntu-18.04
     steps:
-    - name: Checkout
+    - name: Checkout branch
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: "Set up node js"
+    - name: "Set up node v16"
       uses: actions/setup-node@v3
       with:
         node-version: 16
-    - name: "Install dependencies"
-      run: npm i --legacy-peer-deps
+    - name: "Install node dependencies"
+      run: npm i --legacy-peer-deps --no-audit --no-fund
     - name: "Aplying linter"
       run: npm run eslint
     - name: "Running unit tests"
       run: npm run test
+    - name: "Running e2e tests"
+      run: npm run test:e2e
     - name: "Doing the build"
       run: npm run build
 
