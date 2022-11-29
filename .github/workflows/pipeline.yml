@@ -23,6 +23,6 @@ jobs:
     - name: "Running unit tests"
       run: npm run test
     - name: "Doing the build"
-      run: npm run build"
+      run: npm run build
 
 
