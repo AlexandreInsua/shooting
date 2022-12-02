@@ -5,13 +5,37 @@ on:
     branches: ["main", "development"]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-18.04
+  avoid_redundancy:
+    runs-on: ubuntu-22.04
     steps:
     - name: "Cancel redudant pipeline"
       uses: styfle/cancel-workflow-action@0.9.1
       with:
         access-token: ${{ github.token}}
+
+  lint:
+    needs:
+    - avoid_redundancy
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: "Set up node v16"
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: "Install node dependencies"
+      run: npm i --legacy-peer-deps --no-audit --no-fund
+    - name: "Aplying linter"
+      run: npm run eslint
+
+  unit_tests:
+    needs:
+    - avoid_redundancy
+    runs-on: ubuntu-22.04
+    steps:
     - name: Checkout branch
       uses: actions/checkout@v3
       with:
@@ -26,9 +50,62 @@ jobs:
       run: npm run eslint
     - name: "Running unit tests"
       run: npm run test
+
+  e2e_tests:
+    needs:
+    - avoid_redundancy
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: "Set up node v16"
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: "Install node dependencies"
+      run: npm i --legacy-peer-deps --no-audit --no-fund
+    - name: "Aplying linter"
+      run: npm run eslint
     - name: "Running e2e tests"
       run: npm run test:e2e
+
+  build:
+    needs:
+    - avoid_redundancy
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: "Set up node v16"
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: "Install node dependencies"
+      run: npm i --legacy-peer-deps --no-audit --no-fund
+    - name: "Aplying linter"
+      run: npm run eslint
     - name: "Doing the build"
       run: npm run build
+    - uses : actions/upload-artifact@v2
+      with:
+        name: dist
+        path: dist
+
+  deploy:
+    needs: [lint, unit_tests, e2e_tests,build]
+    runs-on: ubuntu-22.04
+    steps:
+    - uses : actions/download-artifact@v2
+      with:
+        name: dist
+        path: dist
+    - name: "Deploy"
+      run: ls -anol /dist/* && echo "TODO prepare deploy on somewhere..."
+
+
 
 
