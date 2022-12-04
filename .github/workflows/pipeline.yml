@@ -104,7 +104,7 @@ jobs:
         name: dist
         path: dist
     - name: "Deploy"
-      run: ls -anol /dist/* && echo "TODO prepare deploy on somewhere..."
+      run: ls -anol dist/* && echo "TODO prepare deploy on somewhere..."
 
 
 
